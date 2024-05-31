@@ -1,26 +1,27 @@
 const result = document.querySelector("#result-line");
 const buttons = document.querySelectorAll(".button");
-let res = "", firstN = "", secondN = "", operator = "";
-let [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false];
-const operators = ["/", "*", "+", "-"];
+let res = "", firstN = "", secondN = "", operator = ""; // SET DEFAULT VALUES (EMPTY STRINGS)
+let [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false]; // VALUES HAVE NOT BEEN SET
+const operators = ["/", "*", "+", "-"]; // POSSIBLE OPERATIONS
 let operationResult;
 
 buttons.forEach((button) => button.onclick = () => {
     res += button.textContent;
     let input = button.textContent;
 
+    // CLEAR
     if (button.textContent === "C") {
-        [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false];
-        res = "";
+        [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false]; // RESET VALUES TO NOT BE SET
+        res = "", firstN = "", secondN = "", operator = ""; // RESET VARIABLES TO DEFAULT
         result.textContent = "0";
         return;
-    } else if (operators.includes(input) && !operatorPartDefined) {
+    } else if (operators.includes(input) && !operatorPartDefined) { // SETS THE OPERATOR
         operator = input;
         operatorPartDefined = true;
         firstPartDefined = true;
-    } else if (!firstPartDefined) {
+    } else if (!firstPartDefined) { // SETS FIRST NUMBER
         firstN += input;
-    } else if (isNum(input) || input === ".") {
+    } else if (isNum(input) || input === ".") { // SETS SECOND NUMBER
         secondN += input;
     }
 
@@ -29,6 +30,8 @@ buttons.forEach((button) => button.onclick = () => {
     if (input === "=") {
         operate();
         result.textContent = `${operationResult}`;
+        res = "", firstN = "", secondN = "", operator = ""; // RESET VARIABLES TO DEFAULT
+        [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false]; // RESET VALUES TO NOT BE SET
     }
 
 });
