@@ -56,6 +56,10 @@ main {
     background-color: rgb(178, 178, 255);
 }
 
+#result-line {
+    text-align: right;
+}
+
 /* FOOTER STYLES */
 
 footer {
