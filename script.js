@@ -2,7 +2,7 @@ const result = document.querySelector("#result-line");
 const buttons = document.querySelectorAll(".button");
 let res = "", firstN = "", secondN = "", operator = ""; // SET DEFAULT VALUES (EMPTY STRINGS)
 let [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false]; // VALUES HAVE NOT BEEN SET
-const operators = ["/", "*", "+", "-"]; // POSSIBLE OPERATIONS
+const operators = ["/", "*", "+", "-", "%"]; // POSSIBLE OPERATIONS
 let operationResult;
 
 buttons.forEach((button) => button.onclick = () => {
@@ -50,6 +50,9 @@ function operate() {
         case "/":
             operationResult = divide(firstN, secondN);
             break;
+        case "%":
+            operationResult = percentage(firstN, secondN);
+            break;
     }
 }
 
@@ -63,17 +66,21 @@ function isNum(num) {
 }
 
 function add(a, b) {
-    return parseFloat(a) + parseFloat(b);
+    return (parseFloat(a) + parseFloat(b)).toFixed(2);
 }
 
 function subtract(a, b) {
-    return parseFloat(a) - parseFloat(b);
+    return (parseFloat(a) - parseFloat(b)).toFixed(2);
 }
 
 function multiply(a, b) {
-    return parseFloat(a) * parseFloat(b);
+    return (parseFloat(a) * parseFloat(b)).toFixed(2);
 }
 
 function divide(a, b) {
-    return parseFloat(a) / parseFloat(b);
+    return (parseFloat(a) / parseFloat(b)).toFixed(2);
+}
+
+function percentage(a, b) {
+    return (parseFloat(a) / 100 * parseFloat(b)).toFixed(2);
 }
