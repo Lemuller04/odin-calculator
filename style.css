@@ -20,15 +20,43 @@ header {
     text-align: center;
 }
 
+/* MAIN STYLES */
+
 main {
     background-color: rgb(92, 26, 26);
     flex: 1;
     padding: 3% 30%;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    align-items: center;
 }
+
+.line-container {
+    display: flex;
+}
+
+.line-container > div {
+    background-color: aliceblue;
+    color: black;
+    padding: 32px;
+    font-size: 40px;
+    font-weight: 300;
+    width: 100%;
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+}
+
+#zero {
+    min-width: 50%;
+}
+
+.number:hover, #zero:hover {
+    background-color: rgb(180, 180, 180);
+}
+
+.symbol:hover {
+    background-color: rgb(178, 178, 255);
+}
+
+/* FOOTER STYLES */
 
 footer {
     background-color: rgb(37, 11, 11);
