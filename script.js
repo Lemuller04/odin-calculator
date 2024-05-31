@@ -3,6 +3,7 @@ const buttons = document.querySelectorAll(".button");
 let res = "", firstN = "", secondN = "", operator = "";
 let [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false];
 const operators = ["/", "*", "+", "-"];
+let operationResult;
 
 buttons.forEach((button) => button.onclick = () => {
     res += button.textContent;
@@ -24,6 +25,25 @@ buttons.forEach((button) => button.onclick = () => {
     }
 
     result.textContent = `${res}`;
+
+    if (input === "=") {
+        switch (operator) {
+            case "+":
+                operationResult = add(firstN, secondN);
+                break;
+            case "-":
+                operationResult = subtract(firstN, secondN);
+                break;
+            case "*":
+                operationResult = multiply(firstN, secondN);
+                break;
+            case "/":
+                operationResult = divide(firstN, secondN);
+                break;
+        }
+        result.textContent = `${operationResult}`;
+    }
+
 });
 
 function isNum(num) {
@@ -36,17 +56,17 @@ function isNum(num) {
 }
 
 function add(a, b) {
-    return a + b;
+    return parseFloat(a) + parseFloat(b);
 }
 
 function subtract(a, b) {
-    return a - b;
+    return parseFloat(a) - parseFloat(b);
 }
 
 function multiply(a, b) {
-    return a * b;
+    return parseFloat(a) * parseFloat(b);
 }
 
 function divide(a, b) {
-    return a / b;
+    return parseFloat(a) / parseFloat(b);
 }
