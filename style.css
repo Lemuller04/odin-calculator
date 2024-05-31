@@ -44,7 +44,7 @@ main {
     text-align: center;
 }
 
-#zero {
+#zero, #clear {
     min-width: 50%;
 }
 
