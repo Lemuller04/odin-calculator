@@ -1,86 +1,129 @@
 const result = document.querySelector("#result-line");
 const buttons = document.querySelectorAll(".button");
-let res = "", firstN = "", secondN = "", operator = ""; // SET DEFAULT VALUES (EMPTY STRINGS)
-let [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false]; // VALUES HAVE NOT BEEN SET
-const operators = ["/", "*", "+", "-", "%"]; // POSSIBLE OPERATIONS
-let operationResult;
+const operators = "+-/*"; // POSSIBLE OPERATIONS
+const numbers = "0123456789";
+let operationResul = 0;
+
+let res = "", operator = ""; // SET DEFAULT VALUES (EMPTY STRINGS)
+let firstN = {value: ""};
+let secondN = {value: ""};
+// INITIAL STATE VARIABLES
+let firstPartDefined = false;
+let secondPartDefined = false;
+let operatorPartDefined = false;
+let placeholder = true;
+let firstDigit = true;
+let operatorJustDefined = false;
 
 buttons.forEach((button) => button.onclick = () => {
-    res += button.textContent;
-    let input = button.textContent;
-
-    // CLEAR
-    if (button.textContent === "C") {
-        [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false]; // RESET VALUES TO NOT BE SET
-        res = "", firstN = "", secondN = "", operator = ""; // RESET VARIABLES TO DEFAULT
+    if (placeholder) {
+        result.textContent = "";
+        placeholder = false;
+    }
+    
+    if (operators.includes(button.textContent) && !operatorPartDefined) {
+        updateOperator(button.textContent);
+        updateResultElement();
+    }
+    
+    if (!firstPartDefined) {
+        updateNumberPart(firstN, button.textContent);
+        updateResultElement();
+    }
+    
+    if (firstPartDefined && operatorPartDefined && !secondPartDefined) {
+        updateNumberPart(secondN, button.textContent);
+        updateResultElement();
+        operatorJustDefined = false;
+    }
+    
+    if (button.textContent === "=" && firstPartDefined && operatorPartDefined) {
+        processEqualsButton();
+    }
+    
+    if (!placeholder && result.textContent.length === 0) {
         result.textContent = "0";
-        return;
-    } else if (operators.includes(input) && !operatorPartDefined) { // SETS THE OPERATOR
-        operator = input;
-        operatorPartDefined = true;
-        firstPartDefined = true;
-    } else if (!firstPartDefined) { // SETS FIRST NUMBER
-        firstN += input;
-    } else if (isNum(input) || input === ".") { // SETS SECOND NUMBER
-        secondN += input;
+        placeholder = false;
     }
-
-    result.textContent = `${res}`;
-
-    if (input === "=") {
-        operate();
-        result.textContent = `${operationResult}`;
-        res = "", firstN = "", secondN = "", operator = ""; // RESET VARIABLES TO DEFAULT
-        [firstPartDefined, secondPartDefined, operatorPartDefined] = [false, false, false]; // RESET VALUES TO NOT BE SET
+    
+    if (button.textContent === "C") {
+        reset();
     }
-
 });
+
+function processEqualsButton() {
+    if (secondN.value.length === 0 || secondN.value === "."|| secondN.value === "-"|| secondN.value === "-.") {
+        secondN.value = "0";
+    }
+    secondPartDefined = true;
+    updateResultElement(true);
+}
+
+function updateNumberPart(n, btn) {
+    if (btn === "-" && firstDigit && !operatorJustDefined) {
+        n.value += btn;
+        firstDigit = false;
+        return;
+    }
+    
+    if (btn === "." && !n.value.includes(".")) {
+        n.value += btn;
+        firstDigit = false;
+        return;
+    }
+
+    if (numbers.includes(btn)) {
+        n.value += btn;
+        firstDigit = false;
+        return;
+    }
+}
+
+function updateOperator(btn) {
+    if (firstDigit && btn === "-") {
+        return;
+    }
+
+    if (firstN.value.length === 0 || firstN.value === "-" || firstN.value === "." || firstN.value === "-.") {
+        firstN.value = "0";
+    }
+
+    operator = btn;
+    operatorPartDefined = true;
+    firstPartDefined = true;
+    firstDigit = true;
+    operatorJustDefined = true;
+}
+
+function updateResultElement(final=false) {
+    if (!final) {
+        result.textContent = `${firstN.value + operator + secondN.value}`;
+    } else {
+        result.textContent = `${operate()}`;
+    }
+}
 
 function operate() {
     switch (operator) {
         case "+":
-            operationResult = add(firstN, secondN);
-            break;
+            return parseFloat(firstN.value) + parseFloat(secondN.value);
         case "-":
-            operationResult = subtract(firstN, secondN);
-            break;
-        case "*":
-            operationResult = multiply(firstN, secondN);
-            break;
+            return parseFloat(firstN.value) - parseFloat(secondN.value);
         case "/":
-            operationResult = divide(firstN, secondN);
-            break;
-        case "%":
-            operationResult = percentage(firstN, secondN);
-            break;
+            return parseFloat(firstN.value) / parseFloat(secondN.value);
+        case "*":
+            return parseFloat(firstN.value) * parseFloat(secondN.value);
     }
 }
 
-function isNum(num) {
-    for (let i = 0; i < num.length; i++) {
-        if (!(num[i].charCodeAt() > 47 && num[i].charCodeAt() < 58)) {
-            return false;
-        }
-    }
-    return true;
-}
-
-function add(a, b) {
-    return (parseFloat(a) + parseFloat(b)).toFixed(2);
-}
-
-function subtract(a, b) {
-    return (parseFloat(a) - parseFloat(b)).toFixed(2);
-}
-
-function multiply(a, b) {
-    return (parseFloat(a) * parseFloat(b)).toFixed(2);
-}
-
-function divide(a, b) {
-    return (parseFloat(a) / parseFloat(b)).toFixed(2);
-}
-
-function percentage(a, b) {
-    return (parseFloat(a) / 100 * parseFloat(b)).toFixed(2);
+function reset() {
+    res = "", operator = "";
+    firstN = {value: ""};
+    secondN = {value: ""};
+    firstPartDefined = false;
+    secondPartDefined = false;
+    operatorPartDefined = false;
+    placeholder = true;
+    firstDigit = true;
+    result.textContent = "0";
 }
