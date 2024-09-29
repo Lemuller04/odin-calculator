@@ -110,6 +110,11 @@ function operate() {
         case "-":
             return parseFloat(firstN.value) - parseFloat(secondN.value);
         case "/":
+            if (secondN.value === "0") {
+                alert("[ERROR] Can't divide by zero");
+                reset();
+                return "0";
+            }
             return parseFloat(firstN.value) / parseFloat(secondN.value);
         case "*":
             return parseFloat(firstN.value) * parseFloat(secondN.value);
