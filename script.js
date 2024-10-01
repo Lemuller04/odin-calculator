@@ -15,6 +15,7 @@ let operatorPartDefined = false;
 let placeholder = true;
 let firstDigit = true;
 let operatorJustDefined = false;
+let validSecondNumber = false;
 
 buttons.forEach((button) => button.onclick = () => {
     // This is to remove the default zero on the result element
@@ -63,6 +64,23 @@ buttons.forEach((button) => button.onclick = () => {
         console.log("clearing");
         reset();
     }
+
+    if (operators.includes(button.textContent)) {
+        if (validSecondNumber) {
+            console.log("caralho");
+            firstN.value = String(operate());
+            firstPartDefined = true;
+            operator = button.textContent;
+            operatorPartDefined = true;
+            secondN.value = "";
+            secondPartDefined = false;
+            firstDigit = true;
+            placeholder = false;
+            operatorJustDefined = true;
+            validSecondNumber = false;
+            updateResultElement();
+        }
+    }
 });
 
 function processEqualsButton() {
@@ -75,6 +93,8 @@ function processEqualsButton() {
 }
 
 function updateNumberPart(n, btn) {
+    validSecondNumber = secondN.value.length > 0 && secondN.value != "." && secondN.value != "-" && secondN.value != ".-";
+
     // If "-" is pressed and it's the first digit, let it be a negative number
     if (btn === "-" && firstDigit && !operatorJustDefined) {
         n.value += btn;
@@ -125,7 +145,7 @@ function updateOperator(btn) {
 
 function updateResultElement(final=false) {
     if (!final) {
-        result.textContent = `${firstN.value + operator + secondN.value}`;
+        result.textContent = `${firstN.value} ${operator} ${secondN.value}`;
     } else { // When final = true it means the "=" button was pressed
         let res = operate();
         
@@ -136,6 +156,7 @@ function updateResultElement(final=false) {
         operatorPartDefined = false;
         operatorJustDefined = false;
         firstDigit = true;
+        validSecondNumber = false;
 
         result.textContent = `${res}`;
     }
@@ -144,18 +165,18 @@ function updateResultElement(final=false) {
 function operate() {
     switch (operator) {
         case "+":
-            return parseFloat(firstN.value) + parseFloat(secondN.value);
-        case "-":
-            return parseFloat(firstN.value) - parseFloat(secondN.value);
+            return (parseFloat(firstN.value) + parseFloat(secondN.value)).toFixed(2);
+            case "-":
+            return (parseFloat(firstN.value) - parseFloat(secondN.value)).toFixed(2);
         case "/":
             if (secondN.value === "0") {
-                alert("[ERROR] Can't divide by zero");
+                // alert("[ERROR] Can't divide by zero");
                 reset();
-                return "0";
+                return "[ERROR]";
             }
-            return parseFloat(firstN.value) / parseFloat(secondN.value);
+            return (parseFloat(firstN.value) / parseFloat(secondN.value)).toFixed(2);
         case "*":
-            return parseFloat(firstN.value) * parseFloat(secondN.value);
+            return (parseFloat(firstN.value) * parseFloat(secondN.value)).toFixed(2);
     }
 }
 
@@ -170,4 +191,5 @@ function reset() {
     firstDigit = true;
     result.textContent = "0";
     operatorJustDefined = false;
+    validSecondNumber = false;
 }
